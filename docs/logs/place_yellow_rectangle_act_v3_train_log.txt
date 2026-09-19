@@ -1,0 +1,166 @@
+$ lerobot-train --dataset.repo_id=robododo/place-yellow-rectangle-lightbox --dataset.root="datasets/place-yellow-rectangle-lightbox_20260716_163754" --policy.type=act --policy.device=cuda --policy.repo_id=robododo/place_yellow_rectangle_act_v3 --output_dir=outputs/train/place_yellow_rectangle_act_v3 --job_name=place_yellow_rectangle_act_v3 --policy.chunk_size=50 --policy.n_action_steps=50 --policy.dim_model=256 --policy.dim_feedforward=1024 --policy.n_heads=4 --policy.n_encoder_layers=3 --policy.n_decoder_layers=1 --policy.latent_dim=32 --policy.n_obs_steps=1 --steps=30000 --batch_size=4 --wandb.enable=true
+
+INFO 2026-07-16 16:37:54 erobot_train.py Creating dataset
+INFO 2026-07-16 16:37:56 erobot_train.py Creating policy
+INFO 2026-07-16 16:37:57 erobot_train.py Creating optimizer and scheduler
+INFO 2026-07-16 16:37:57 erobot_train.py [33m[1mOutput dir:[0m outputs/train/place_yellow_rectangle_act_v3
+INFO 2026-07-16 16:37:57 erobot_train.py cfg.steps=30000 (30K)
+INFO 2026-07-16 16:37:57 erobot_train.py dataset.num_frames=18000 (18K)
+INFO 2026-07-16 16:37:57 erobot_train.py dataset.num_episodes=40
+INFO 2026-07-16 16:37:57 erobot_train.py Effective batch size: 4 x 1 = 4
+INFO 2026-07-16 16:37:57 erobot_train.py num_learnable_params=17925894 (18M)
+INFO 2026-07-16 16:37:57 erobot_train.py num_total_params=17925894 (18M)
+INFO 2026-07-16 16:37:58 erobot_train.py Start offline training on a fixed dataset, with effective batch size: 4
+
+INFO 2026-07-16 16:39:25 erobot_train.py step:200 smpl:800 ep:2 epch:0.04 loss:14.826 grdn:226.713 lr:1.0e-05 updt_s:0.429 data_s:0.006 smp/s:9 mem_gb:5.69
+INFO 2026-07-16 16:40:44 erobot_train.py step:400 smpl:2K ep:4 epch:0.09 loss:4.301 grdn:108.134 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:42:02 erobot_train.py step:600 smpl:2K ep:5 epch:0.13 loss:3.382 grdn:89.535 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:43:21 erobot_train.py step:800 smpl:3K ep:7 epch:0.18 loss:2.908 grdn:80.048 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:44:40 erobot_train.py step:1K smpl:4K ep:9 epch:0.22 loss:2.638 grdn:73.907 lr:1.0e-05 updt_s:0.393 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:45:59 erobot_train.py step:1K smpl:5K ep:11 epch:0.27 loss:2.409 grdn:68.556 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:47:18 erobot_train.py step:1K smpl:6K ep:12 epch:0.31 loss:2.252 grdn:65.133 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:48:38 erobot_train.py step:2K smpl:6K ep:14 epch:0.36 loss:2.109 grdn:62.446 lr:1.0e-05 updt_s:0.398 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:49:58 erobot_train.py step:2K smpl:7K ep:16 epch:0.40 loss:1.982 grdn:60.360 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:51:17 erobot_train.py step:2K smpl:8K ep:18 epch:0.44 loss:1.904 grdn:57.394 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:52:36 erobot_train.py step:2K smpl:9K ep:20 epch:0.49 loss:1.812 grdn:56.217 lr:1.0e-05 updt_s:0.393 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:53:55 erobot_train.py step:2K smpl:10K ep:21 epch:0.53 loss:1.720 grdn:54.563 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:55:12 erobot_train.py step:3K smpl:10K ep:23 epch:0.58 loss:1.627 grdn:53.742 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:56:30 erobot_train.py step:3K smpl:11K ep:25 epch:0.62 loss:1.533 grdn:51.710 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:57:49 erobot_train.py step:3K smpl:12K ep:27 epch:0.67 loss:1.467 grdn:50.498 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 16:59:07 erobot_train.py step:3K smpl:13K ep:28 epch:0.71 loss:1.395 grdn:49.385 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:00:25 erobot_train.py step:3K smpl:14K ep:30 epch:0.76 loss:1.338 grdn:48.356 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:01:43 erobot_train.py step:4K smpl:14K ep:32 epch:0.80 loss:1.273 grdn:47.630 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:03:02 erobot_train.py step:4K smpl:15K ep:34 epch:0.84 loss:1.220 grdn:47.756 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:04:20 erobot_train.py step:4K smpl:16K ep:36 epch:0.89 loss:1.148 grdn:45.450 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:05:38 erobot_train.py step:4K smpl:17K ep:37 epch:0.93 loss:1.107 grdn:45.735 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:06:56 erobot_train.py step:4K smpl:18K ep:39 epch:0.98 loss:1.057 grdn:44.392 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:08:16 erobot_train.py step:5K smpl:18K ep:41 epch:1.02 loss:1.004 grdn:42.836 lr:1.0e-05 updt_s:0.394 data_s:0.005 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:09:34 erobot_train.py step:5K smpl:19K ep:43 epch:1.07 loss:0.940 grdn:41.122 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:10:52 erobot_train.py step:5K smpl:20K ep:44 epch:1.11 loss:0.912 grdn:41.496 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:12:10 erobot_train.py step:5K smpl:21K ep:46 epch:1.16 loss:0.867 grdn:40.638 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:13:29 erobot_train.py step:5K smpl:22K ep:48 epch:1.20 loss:0.821 grdn:38.955 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:14:47 erobot_train.py step:6K smpl:22K ep:50 epch:1.24 loss:0.785 grdn:38.094 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:16:05 erobot_train.py step:6K smpl:23K ep:52 epch:1.29 loss:0.748 grdn:37.679 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:17:23 erobot_train.py step:6K smpl:24K ep:53 epch:1.33 loss:0.718 grdn:36.725 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:18:42 erobot_train.py step:6K smpl:25K ep:55 epch:1.38 loss:0.673 grdn:35.915 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:19:59 erobot_train.py step:6K smpl:26K ep:57 epch:1.42 loss:0.654 grdn:34.841 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:21:17 erobot_train.py step:7K smpl:26K ep:59 epch:1.47 loss:0.607 grdn:33.787 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:22:36 erobot_train.py step:7K smpl:27K ep:60 epch:1.51 loss:0.591 grdn:33.741 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:23:53 erobot_train.py step:7K smpl:28K ep:62 epch:1.56 loss:0.568 grdn:33.537 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:25:12 erobot_train.py step:7K smpl:29K ep:64 epch:1.60 loss:0.539 grdn:31.749 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:26:31 erobot_train.py step:7K smpl:30K ep:66 epch:1.64 loss:0.519 grdn:31.591 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:27:50 erobot_train.py step:8K smpl:30K ep:68 epch:1.69 loss:0.503 grdn:30.940 lr:1.0e-05 updt_s:0.394 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:29:09 erobot_train.py step:8K smpl:31K ep:69 epch:1.73 loss:0.472 grdn:30.046 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:30:27 erobot_train.py step:8K smpl:32K ep:71 epch:1.78 loss:0.456 grdn:29.812 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:31:46 erobot_train.py step:8K smpl:33K ep:73 epch:1.82 loss:0.432 grdn:28.725 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:33:05 erobot_train.py step:8K smpl:34K ep:75 epch:1.87 loss:0.417 grdn:28.310 lr:1.0e-05 updt_s:0.392 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:34:23 erobot_train.py step:9K smpl:34K ep:76 epch:1.91 loss:0.401 grdn:27.335 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:35:41 erobot_train.py step:9K smpl:35K ep:78 epch:1.96 loss:0.393 grdn:27.504 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:36:59 erobot_train.py step:9K smpl:36K ep:80 epch:2.00 loss:0.380 grdn:27.344 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:38:18 erobot_train.py step:9K smpl:37K ep:82 epch:2.04 loss:0.357 grdn:26.333 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:39:36 erobot_train.py step:9K smpl:38K ep:84 epch:2.09 loss:0.336 grdn:25.115 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:40:54 erobot_train.py step:10K smpl:38K ep:85 epch:2.13 loss:0.331 grdn:24.840 lr:1.0e-05 updt_s:0.384 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:42:12 erobot_train.py step:10K smpl:39K ep:87 epch:2.18 loss:0.319 grdn:24.070 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:43:31 erobot_train.py step:10K smpl:40K ep:89 epch:2.22 loss:0.320 grdn:24.490 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:44:49 erobot_train.py step:10K smpl:41K ep:91 epch:2.27 loss:0.299 grdn:24.068 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:46:08 erobot_train.py step:10K smpl:42K ep:92 epch:2.31 loss:0.299 grdn:24.128 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:47:27 erobot_train.py step:11K smpl:42K ep:94 epch:2.36 loss:0.286 grdn:22.500 lr:1.0e-05 updt_s:0.394 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:48:46 erobot_train.py step:11K smpl:43K ep:96 epch:2.40 loss:0.280 grdn:22.303 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:50:04 erobot_train.py step:11K smpl:44K ep:98 epch:2.44 loss:0.275 grdn:22.565 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:51:22 erobot_train.py step:11K smpl:45K ep:100 epch:2.49 loss:0.274 grdn:22.726 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:52:41 erobot_train.py step:11K smpl:46K ep:101 epch:2.53 loss:0.265 grdn:21.946 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:53:58 erobot_train.py step:12K smpl:46K ep:103 epch:2.58 loss:0.258 grdn:21.889 lr:1.0e-05 updt_s:0.384 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:55:16 erobot_train.py step:12K smpl:47K ep:105 epch:2.62 loss:0.248 grdn:21.118 lr:1.0e-05 updt_s:0.383 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:56:34 erobot_train.py step:12K smpl:48K ep:107 epch:2.67 loss:0.243 grdn:20.948 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:57:51 erobot_train.py step:12K smpl:49K ep:108 epch:2.71 loss:0.240 grdn:20.858 lr:1.0e-05 updt_s:0.384 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 17:59:09 erobot_train.py step:12K smpl:50K ep:110 epch:2.76 loss:0.239 grdn:20.736 lr:1.0e-05 updt_s:0.384 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:00:26 erobot_train.py step:13K smpl:50K ep:112 epch:2.80 loss:0.229 grdn:20.166 lr:1.0e-05 updt_s:0.382 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:01:46 erobot_train.py step:13K smpl:51K ep:114 epch:2.84 loss:0.233 grdn:20.515 lr:1.0e-05 updt_s:0.393 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:03:05 erobot_train.py step:13K smpl:52K ep:116 epch:2.89 loss:0.222 grdn:19.852 lr:1.0e-05 updt_s:0.392 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:04:23 erobot_train.py step:13K smpl:53K ep:117 epch:2.93 loss:0.222 grdn:20.019 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:05:41 erobot_train.py step:13K smpl:54K ep:119 epch:2.98 loss:0.215 grdn:19.105 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:07:00 erobot_train.py step:14K smpl:54K ep:121 epch:3.02 loss:0.216 grdn:19.388 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:08:18 erobot_train.py step:14K smpl:55K ep:123 epch:3.07 loss:0.202 grdn:18.279 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:09:36 erobot_train.py step:14K smpl:56K ep:124 epch:3.11 loss:0.203 grdn:19.124 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:10:55 erobot_train.py step:14K smpl:57K ep:126 epch:3.16 loss:0.204 grdn:19.254 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:12:14 erobot_train.py step:14K smpl:58K ep:128 epch:3.20 loss:0.198 grdn:18.176 lr:1.0e-05 updt_s:0.393 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:13:32 erobot_train.py step:15K smpl:58K ep:130 epch:3.24 loss:0.196 grdn:18.016 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:14:51 erobot_train.py step:15K smpl:59K ep:132 epch:3.29 loss:0.193 grdn:17.955 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:16:10 erobot_train.py step:15K smpl:60K ep:133 epch:3.33 loss:0.195 grdn:18.093 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:17:28 erobot_train.py step:15K smpl:61K ep:135 epch:3.38 loss:0.195 grdn:18.014 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:18:47 erobot_train.py step:15K smpl:62K ep:137 epch:3.42 loss:0.185 grdn:17.541 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:20:05 erobot_train.py step:16K smpl:62K ep:139 epch:3.47 loss:0.186 grdn:18.139 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:21:24 erobot_train.py step:16K smpl:63K ep:140 epch:3.51 loss:0.182 grdn:17.486 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:22:41 erobot_train.py step:16K smpl:64K ep:142 epch:3.56 loss:0.179 grdn:16.799 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:24:00 erobot_train.py step:16K smpl:65K ep:144 epch:3.60 loss:0.180 grdn:17.391 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:25:18 erobot_train.py step:16K smpl:66K ep:146 epch:3.64 loss:0.179 grdn:16.579 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:26:37 erobot_train.py step:17K smpl:66K ep:148 epch:3.69 loss:0.174 grdn:16.834 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:27:54 erobot_train.py step:17K smpl:67K ep:149 epch:3.73 loss:0.170 grdn:16.739 lr:1.0e-05 updt_s:0.384 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:29:12 erobot_train.py step:17K smpl:68K ep:151 epch:3.78 loss:0.178 grdn:17.236 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:30:30 erobot_train.py step:17K smpl:69K ep:153 epch:3.82 loss:0.170 grdn:16.451 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:31:48 erobot_train.py step:17K smpl:70K ep:155 epch:3.87 loss:0.168 grdn:15.914 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:33:06 erobot_train.py step:18K smpl:70K ep:156 epch:3.91 loss:0.170 grdn:16.583 lr:1.0e-05 updt_s:0.385 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:34:24 erobot_train.py step:18K smpl:71K ep:158 epch:3.96 loss:0.169 grdn:16.422 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:35:42 erobot_train.py step:18K smpl:72K ep:160 epch:4.00 loss:0.163 grdn:15.643 lr:1.0e-05 updt_s:0.386 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:37:02 erobot_train.py step:18K smpl:73K ep:162 epch:4.04 loss:0.168 grdn:16.283 lr:1.0e-05 updt_s:0.394 data_s:0.005 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:38:20 erobot_train.py step:18K smpl:74K ep:164 epch:4.09 loss:0.160 grdn:15.260 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:39:39 erobot_train.py step:19K smpl:74K ep:165 epch:4.13 loss:0.155 grdn:15.569 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:40:58 erobot_train.py step:19K smpl:75K ep:167 epch:4.18 loss:0.154 grdn:14.960 lr:1.0e-05 updt_s:0.392 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:42:17 erobot_train.py step:19K smpl:76K ep:169 epch:4.22 loss:0.151 grdn:14.811 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:43:35 erobot_train.py step:19K smpl:77K ep:171 epch:4.27 loss:0.157 grdn:15.118 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:44:54 erobot_train.py step:19K smpl:78K ep:172 epch:4.31 loss:0.154 grdn:14.461 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:46:13 erobot_train.py step:20K smpl:78K ep:174 epch:4.36 loss:0.153 grdn:15.264 lr:1.0e-05 updt_s:0.392 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:47:32 erobot_train.py step:20K smpl:79K ep:176 epch:4.40 loss:0.152 grdn:15.462 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:48:51 erobot_train.py step:20K smpl:80K ep:178 epch:4.44 loss:0.150 grdn:14.871 lr:1.0e-05 updt_s:0.392 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:48:51 erobot_train.py Checkpoint policy after step 20000
+INFO 2026-07-16 18:50:11 erobot_train.py step:20K smpl:81K ep:180 epch:4.49 loss:0.148 grdn:14.856 lr:1.0e-05 updt_s:0.394 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:51:29 erobot_train.py step:20K smpl:82K ep:181 epch:4.53 loss:0.144 grdn:14.563 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:52:47 erobot_train.py step:21K smpl:82K ep:183 epch:4.58 loss:0.147 grdn:14.837 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:54:06 erobot_train.py step:21K smpl:83K ep:185 epch:4.62 loss:0.146 grdn:15.015 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:55:25 erobot_train.py step:21K smpl:84K ep:187 epch:4.67 loss:0.146 grdn:14.898 lr:1.0e-05 updt_s:0.392 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:56:43 erobot_train.py step:21K smpl:85K ep:188 epch:4.71 loss:0.144 grdn:13.874 lr:1.0e-05 updt_s:0.387 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:58:02 erobot_train.py step:21K smpl:86K ep:190 epch:4.76 loss:0.141 grdn:13.807 lr:1.0e-05 updt_s:0.388 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 18:59:20 erobot_train.py step:22K smpl:86K ep:192 epch:4.80 loss:0.139 grdn:13.607 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:00:41 erobot_train.py step:22K smpl:87K ep:194 epch:4.84 loss:0.143 grdn:13.998 lr:1.0e-05 updt_s:0.400 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:02:00 erobot_train.py step:22K smpl:88K ep:196 epch:4.89 loss:0.141 grdn:13.947 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:03:18 erobot_train.py step:22K smpl:89K ep:197 epch:4.93 loss:0.140 grdn:13.763 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:04:37 erobot_train.py step:22K smpl:90K ep:199 epch:4.98 loss:0.138 grdn:13.220 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:05:58 erobot_train.py step:23K smpl:90K ep:201 epch:5.02 loss:0.135 grdn:13.934 lr:1.0e-05 updt_s:0.398 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:07:16 erobot_train.py step:23K smpl:91K ep:203 epch:5.07 loss:0.135 grdn:13.425 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:08:35 erobot_train.py step:23K smpl:92K ep:204 epch:5.11 loss:0.135 grdn:13.833 lr:1.0e-05 updt_s:0.389 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:09:54 erobot_train.py step:23K smpl:93K ep:206 epch:5.16 loss:0.134 grdn:13.198 lr:1.0e-05 updt_s:0.391 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:11:13 erobot_train.py step:23K smpl:94K ep:208 epch:5.20 loss:0.134 grdn:13.268 lr:1.0e-05 updt_s:0.393 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:12:33 erobot_train.py step:24K smpl:94K ep:210 epch:5.24 loss:0.133 grdn:14.087 lr:1.0e-05 updt_s:0.393 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:13:52 erobot_train.py step:24K smpl:95K ep:212 epch:5.29 loss:0.133 grdn:13.392 lr:1.0e-05 updt_s:0.390 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:15:11 erobot_train.py step:24K smpl:96K ep:213 epch:5.33 loss:0.133 grdn:13.706 lr:1.0e-05 updt_s:0.392 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:16:31 erobot_train.py step:24K smpl:97K ep:215 epch:5.38 loss:0.133 grdn:13.333 lr:1.0e-05 updt_s:0.397 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:17:51 erobot_train.py step:24K smpl:98K ep:217 epch:5.42 loss:0.128 grdn:12.970 lr:1.0e-05 updt_s:0.397 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:19:11 erobot_train.py step:25K smpl:98K ep:219 epch:5.47 loss:0.133 grdn:13.150 lr:1.0e-05 updt_s:0.396 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:20:32 erobot_train.py step:25K smpl:99K ep:220 epch:5.51 loss:0.129 grdn:13.607 lr:1.0e-05 updt_s:0.401 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:21:53 erobot_train.py step:25K smpl:100K ep:222 epch:5.56 loss:0.128 grdn:13.079 lr:1.0e-05 updt_s:0.401 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:23:14 erobot_train.py step:25K smpl:101K ep:224 epch:5.60 loss:0.128 grdn:12.636 lr:1.0e-05 updt_s:0.399 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:24:34 erobot_train.py step:25K smpl:102K ep:226 epch:5.64 loss:0.130 grdn:13.179 lr:1.0e-05 updt_s:0.399 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:25:55 erobot_train.py step:26K smpl:102K ep:228 epch:5.69 loss:0.124 grdn:12.782 lr:1.0e-05 updt_s:0.401 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:27:16 erobot_train.py step:26K smpl:103K ep:229 epch:5.73 loss:0.125 grdn:12.812 lr:1.0e-05 updt_s:0.400 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:28:36 erobot_train.py step:26K smpl:104K ep:231 epch:5.78 loss:0.123 grdn:12.742 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:29:56 erobot_train.py step:26K smpl:105K ep:233 epch:5.82 loss:0.125 grdn:12.513 lr:1.0e-05 updt_s:0.398 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:31:17 erobot_train.py step:26K smpl:106K ep:235 epch:5.87 loss:0.125 grdn:12.950 lr:1.0e-05 updt_s:0.400 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:32:37 erobot_train.py step:27K smpl:106K ep:236 epch:5.91 loss:0.121 grdn:12.419 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:33:57 erobot_train.py step:27K smpl:107K ep:238 epch:5.96 loss:0.123 grdn:11.893 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:35:16 erobot_train.py step:27K smpl:108K ep:240 epch:6.00 loss:0.123 grdn:12.871 lr:1.0e-05 updt_s:0.396 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:36:38 erobot_train.py step:27K smpl:109K ep:242 epch:6.04 loss:0.121 grdn:12.303 lr:1.0e-05 updt_s:0.404 data_s:0.005 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:37:58 erobot_train.py step:27K smpl:110K ep:244 epch:6.09 loss:0.121 grdn:12.563 lr:1.0e-05 updt_s:0.394 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:39:18 erobot_train.py step:28K smpl:110K ep:245 epch:6.13 loss:0.118 grdn:12.029 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:40:37 erobot_train.py step:28K smpl:111K ep:247 epch:6.18 loss:0.119 grdn:12.436 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:41:58 erobot_train.py step:28K smpl:112K ep:249 epch:6.22 loss:0.119 grdn:11.916 lr:1.0e-05 updt_s:0.400 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:43:18 erobot_train.py step:28K smpl:113K ep:251 epch:6.27 loss:0.117 grdn:11.965 lr:1.0e-05 updt_s:0.396 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:44:38 erobot_train.py step:28K smpl:114K ep:252 epch:6.31 loss:0.120 grdn:12.491 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:45:58 erobot_train.py step:29K smpl:114K ep:254 epch:6.36 loss:0.116 grdn:11.898 lr:1.0e-05 updt_s:0.396 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:47:19 erobot_train.py step:29K smpl:115K ep:256 epch:6.40 loss:0.120 grdn:12.191 lr:1.0e-05 updt_s:0.399 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:48:39 erobot_train.py step:29K smpl:116K ep:258 epch:6.44 loss:0.119 grdn:12.193 lr:1.0e-05 updt_s:0.397 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:49:59 erobot_train.py step:29K smpl:117K ep:260 epch:6.49 loss:0.119 grdn:11.783 lr:1.0e-05 updt_s:0.395 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:51:19 erobot_train.py step:29K smpl:118K ep:261 epch:6.53 loss:0.114 grdn:11.581 lr:1.0e-05 updt_s:0.396 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:52:39 erobot_train.py step:30K smpl:118K ep:263 epch:6.58 loss:0.114 grdn:11.643 lr:1.0e-05 updt_s:0.398 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:53:59 erobot_train.py step:30K smpl:119K ep:265 epch:6.62 loss:0.117 grdn:12.235 lr:1.0e-05 updt_s:0.396 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:55:19 erobot_train.py step:30K smpl:120K ep:267 epch:6.67 loss:0.115 grdn:11.690 lr:1.0e-05 updt_s:0.397 data_s:0.004 smp/s:10 mem_gb:5.68
+INFO 2026-07-16 19:55:19 erobot_train.py End of training

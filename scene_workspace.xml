@@ -1,0 +1,141 @@
+<mujoco model="so101_workspace">
+    <!-- Camera-equipped arm variant: adds the wrist_camera_mount + wrist_camera bodies -->
+    <include file="so101_new_calib_camera.xml" />
+
+    <visual>
+        <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0" />
+        <rgba haze="0.15 0.25 0.35 1" />
+        <global azimuth="160" elevation="-20" />
+    </visual>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512"
+            height="3072" />
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4"
+            rgb2="0.1 0.2 0.3"
+            markrgb="0.8 0.8 0.8" width="300" height="300" />
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5"
+            reflectance="0.2" />
+
+        <!-- Work mat: black EVA foam mat, 18in x 12in x 6mm (matches NVIDIA sim-to-real asset) -->
+        <material name="mat_material" rgba="0.03 0.03 0.03 1" reflectance="0.02" />
+
+        <!-- Lightbox panels: white foam board, 3/16in (~4.8mm) thick -->
+        <material name="foamboard_material" rgba="0.92 0.92 0.9 1" reflectance="0.05" />
+        <!-- Pick-and-place object meshes (scale: source STLs are in mm) -->
+        <mesh name="rectangle" file="objects/rectangle.stl" scale="0.001 0.001 0.001" />
+        <mesh name="rectangle_wide" file="objects/rectangle_wide.stl" scale="0.001 0.001 0.001" />
+        <mesh name="tray" file="objects/tray.stl" scale="0.001 0.001 0.001" />
+
+        <!-- Static viewer default is green. reset() changes this between green
+             and yellow so the block always targets the matching tray. -->
+        <material name="rectangle_material" rgba="0.42 0.78 0.32 1" />
+        <material name="rectangle_wide_material" rgba="0.2 0.4 0.85 1" />
+        <material name="tray_green_material" rgba="0.42 0.78 0.32 1" />
+        <material name="tray_yellow_material" rgba="0.97 0.78 0.05 1" />
+    </asset>
+
+    <worldbody>
+        <!-- Ambient sun so the world outside the lightbox isn't pitch-dark -->
+        <light pos="0 0 3.5" dir="0 0 -1" directional="true" />
+        <geom name="floor" size="0 0 0.05" pos="0 0 0" type="plane" material="groundplane" />
+
+        <!-- =====================================================================
+             Lightbox — replicates the enclosure from NVIDIA's SO-101 sim-to-real
+             workshop (https://docs.nvidia.com/learning/physical-ai/sim-to-real-so-101),
+             reverse-engineered from their lightbox-simple.usd asset
+             (github.com/isaac-sim/Sim-to-Real-SO-101-Workshop). No MJCF/USD asset
+             is published for it (Isaac Sim uses USD, not MuJoCo) so this is a
+             from-scratch MJCF rebuild matching its exact panel dims/poses:
+               - Open-front, open-top box, ~30in x 20in x 20in
+                 (0.762 x 0.508 x 0.508 m)
+               - Base + Left + Right + Back walls: white foam board, ~4.8mm thick
+               - Single LED bar light (real: dimmable, CRI>90, ~4000K) mounted
+                 above the open top, facing straight down
+             ===================================================================== -->
+        <body name="lightbox" pos="0 0 0">
+            <geom name="lightbox_base" type="box" pos="0.25198 0 0"
+                quat="0.70711 0 0 0.70711" size="0.38100 0.25400 0.00243"
+                material="foamboard_material" contype="0" conaffinity="0" />
+            <geom name="lightbox_left" type="box" pos="0.25198 0.38386 0.25199"
+                quat="0.5 -0.5 0.5 0.5" size="0.25400 0.25400 0.00243"
+                material="foamboard_material" contype="0" conaffinity="0" />
+            <geom name="lightbox_right" type="box" pos="0.25198 -0.38094 0.25199"
+                quat="0.5 -0.5 0.5 0.5" size="0.25400 0.25400 0.00243"
+                material="foamboard_material" contype="0" conaffinity="0" />
+            <geom name="lightbox_back" type="box" pos="0.50456 0 0.25355"
+                quat="0.5 -0.5 -0.5 0.5" size="0.38100 0.25400 0.00243"
+                material="foamboard_material" contype="0" conaffinity="0" />
+        </body>
+
+        <!-- LED bar light, mounted above the open top and facing down.
+             Approximated as 3 spotlights along the bar's 0.3m length (real fixture
+             is a single ~4000K, CRI>90, dimmable LED tube -- tuned here to ~90%
+             of max, matching the doc's 50-100% target brightness for data collection). -->
+        <light name="ledbar_1" pos="0.25198 -0.13 0.503" dir="0 0 -1" type="spot" cutoff="70"
+            diffuse="0.95 0.92 0.85" specular="0.1 0.1 0.1" ambient="0.15 0.15 0.14"
+            castshadow="true" />
+        <light name="ledbar_2" pos="0.25198 0.00 0.503" dir="0 0 -1" type="spot" cutoff="70"
+            diffuse="0.95 0.92 0.85" specular="0.1 0.1 0.1" ambient="0.15 0.15 0.14"
+            castshadow="false" />
+        <light name="ledbar_3" pos="0.25198 0.13 0.503" dir="0 0 -1" type="spot" cutoff="70"
+            diffuse="0.95 0.92 0.85" specular="0.1 0.1 0.1" ambient="0.15 0.15 0.14"
+            castshadow="false" />
+
+        <!-- =====================================================================
+             Cameras
+             ===================================================================== -->
+        <!-- External cam: matches the doc's Logitech C920 mount pose (40cm height,
+             27cm behind robot back, 45 deg down, ~78 deg horizontal FOV -> ~49 fovy
+             at 16:9). Pose taken directly from lightbox-simple.usd's camera_mount
+             (quat reused as-is; MuJoCo and USD/OpenGL share the -Z-forward, +Y-up
+             camera convention, so no axis remapping is needed). -->
+        <camera name="external_cam" pos="0.28464 0.33594 0.46364"
+            quat="-0.67157 -0.30609 -0.33824 0.58386" fovy="49" />
+
+        <!-- Overhead + 3/4 front cams for convenience (not in the NVIDIA asset) -->
+        <!-- Dataset overhead camera: oblique view from the front-left of the
+             lightbox, framing the arm and the full mat. -->
+        <camera name="overhead_cam" pos="0 -0.18 0.35"
+            xyaxes="0.633238 -0.773957 0 0.578634 0.473428 0.664114" fovy="55" />
+        <camera name="front_cam" pos="0.55 0 0.30" xyaxes="0 1 0 -0.4 0 1" fovy="55" />
+
+        <!-- ================= Work mat =================
+             30cm x 42cm x 6mm EVA foam mat, resting on the lightbox base.
+             Long axis (42cm) runs side-to-side (Y); short axis (30cm)
+             runs front-to-back (X) -- matches the calibration diagram, where
+             the mat is drawn wider than it is deep. -->
+        <body name="mat" pos="0.25198 0 0.00543">
+            <geom name="mat_geom" type="box" size="0.15000 0.21000 0.003" material="mat_material" />
+        </body>
+
+        <!-- =====================================================================
+             Trays + pick object -- placed per the "Calibrated Workspace" diagram
+             (top-down view, mm converted to m). Diagram gaps used:
+               - 4cm   : mat left edge -> green tray left edge
+               - 11cm  : green tray right edge -> yellow tray right edge (gap
+                         the block sits centered in)
+               - 12.5cm: mat back edge -> tray back edge
+               - 6cm   : tray front edge -> mat front edge
+             With the mat at its correct 30x42cm size these are now consistent
+             to within ~0.5cm of the real 10.855cm tray footprint (depth
+             placement is the average of the back/front-derived centers).
+             ===================================================================== -->
+        <body name="tray_green" pos="0.21948 -0.11572 0.00843">
+            <geom name="tray_green_geom" type="mesh" mesh="tray" material="tray_green_material" />
+        </body>
+
+        <body name="tray_yellow" pos="0.21948 0.10282 0.00843">
+            <geom name="tray_yellow_geom" type="mesh" mesh="tray" material="tray_yellow_material" />
+        </body>
+
+        <!-- Pick object: mesh origin is re-centered to (x_center, y_center,
+             z_min) of its bounding box (see assets/objects/recenter_meshes.py),
+             so body pos.z == mat top height (0.00843) sits it flush on the mat. -->
+        <body name="rectangle_obj" pos="0.21948 -0.00645 0.00843">
+            <freejoint />
+            <geom name="rectangle_geom" type="mesh" mesh="rectangle" material="rectangle_material"
+                density="600" friction="1.0 0.005 0.0001" />
+        </body>
+    </worldbody>
+</mujoco>
