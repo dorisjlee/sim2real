@@ -140,6 +140,7 @@ class SO101MujocoPolicyEnv:
         block_xy: np.ndarray | None = None,
         block_yaw: float | None = None,
         block_color: str | None = None,
+        render_cameras: bool = True,
     ) -> dict[str, np.ndarray | float]:
         mujoco.mj_resetData(self.model, self.data)
 
@@ -180,25 +181,28 @@ class SO101MujocoPolicyEnv:
         self.data.qvel[self.block_dof_address : self.block_dof_address + 6] = 0.0
 
         mujoco.mj_forward(self.model, self.data)
-        return self.observation()
+        return self.observation(render_cameras=render_cameras)
 
     def _render_camera(self, renderer: mujoco.Renderer, camera: str) -> np.ndarray:
         renderer.update_scene(self.data, camera=camera)
         return renderer.render().copy()
 
-    def observation(self) -> dict[str, np.ndarray | float]:
+    def observation(self, render_cameras: bool = True) -> dict[str, np.ndarray | float]:
         joint_state = self.mujoco_to_lerobot(
             self.data.qpos[self.qpos_addresses]
         ).astype(np.float32)
         obs: dict[str, np.ndarray | float] = {
             f"{name}.pos": float(value) for name, value in zip(JOINT_NAMES, joint_state)
         }
-        # The physical dataset calls its wrist-mounted view "front".
-        obs["front"] = self._render_camera(self.front_renderer, "wrist_cam")
-        obs["overhead"] = self._render_camera(self.overhead_renderer, "overhead_cam")
+        if render_cameras:
+            # The physical dataset calls its wrist-mounted view "front".
+            obs["front"] = self._render_camera(self.front_renderer, "wrist_cam")
+            obs["overhead"] = self._render_camera(self.overhead_renderer, "overhead_cam")
         return obs
 
-    def step(self, action_state: np.ndarray) -> dict[str, np.ndarray | float]:
+    def step(
+        self, action_state: np.ndarray, render_cameras: bool = True
+    ) -> dict[str, np.ndarray | float]:
         self.data.ctrl[self.actuator_ids] = self.lerobot_to_mujoco(action_state)
 
         # The MJCF timestep is 2 ms. Step to the next exact 30 Hz policy tick;
@@ -206,12 +210,21 @@ class SO101MujocoPolicyEnv:
         target_time = self.data.time + 1.0 / FPS
         while self.data.time + 1e-12 < target_time:
             mujoco.mj_step(self.model, self.data)
-        return self.observation()
+        return self.observation(render_cameras=render_cameras)
 
     def success(self) -> bool:
         block_xyz = self.data.xpos[self.block_body]
         tray_xyz = self.data.xpos[self.tray_bodies[self.block_color]]
-        return bool(np.linalg.norm(block_xyz[:2] - tray_xyz[:2]) < 0.045 and block_xyz[2] < 0.06)
+        # Rectangle STL is centered in XY, with its origin on the bottom.
+        corners = np.array([[x, y, z] for x in (-0.01125, 0.01125)
+                            for y in (-0.025, 0.025) for z in (0.0, 0.030)])
+        rotation = self.data.xmat[self.block_body].reshape(3, 3)
+        world_corners = corners @ rotation.T + block_xyz
+        inside = np.all(np.abs(world_corners[:, :2] - tray_xyz[:2]) < 0.051275)
+        resting = abs(world_corners[:, 2].min() - (tray_xyz[2] + 0.003)) < 0.003
+        velocity = self.data.qvel[self.block_dof_address:self.block_dof_address + 6]
+        settled = np.linalg.norm(velocity[:3]) < 0.02 and np.linalg.norm(velocity[3:]) < 0.2
+        return bool(inside and resting and settled)
 
     def close(self) -> None:
         self.front_renderer.close()

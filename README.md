@@ -8,10 +8,8 @@ block, wrist camera, and external camera.
 
 - All SO101 MJCF/URDF descriptions and STL meshes needed to load the robot
 - The custom workspace MJCF and user-provided object/tray meshes
-- The Gymnasium environment, leader-arm demonstration recorder, and ACT
-  closed-loop evaluation runner
-- An experimental scripted IK generator that automatically attempts randomized
-  pick-and-place demonstrations and retains successful episodes only
+- The Gymnasium environment, automatic IK demonstration generator, leader-arm
+  recorder, and ACT closed-loop evaluation runner
 - Physical episode replay/alignment and training-log replay utilities
 - The mesh recentering utility and session notes
 
@@ -65,33 +63,40 @@ to and from MuJoCo radians.
 
 ## Record simulation data and train
 
+Inspect the automatic motion live (starts paused):
+
+```powershell
+python view_scripted_motion.py --seed 0
+```
+
+Space plays/pauses, R restarts, and C cycles free, wrist, and overhead views.
+Grasping uses physical contacts only. The expert stops if opposing finger
+contacts or the lift check fail; placement requires the whole block to settle
+inside the matching tray. Run `python -m unittest test_scripted_physics` to
+check contact-only placements and rejection of invalid grasps.
+
 The complete workflow, including leader-arm teleoperation, dataset merging,
 ACT fine-tuning, cloud/local CUDA options, and multi-seed evaluation, is in
 [`docs/TRAINING_WORKFLOW.md`](docs/TRAINING_WORKFLOW.md).
 
-The recording entry point is:
+Generate varied demonstrations automatically:
+
+```powershell
+python generate_scripted_dataset.py --episodes 100
+```
+
+Preview one automatically planned motion without creating a dataset:
+
+```powershell
+python generate_scripted_dataset.py --seed 0 --preview scripted_preview.mp4
+```
+
+Manual leader-arm recording remains available for corrections and behaviors
+that the scripted expert does not cover:
 
 ```powershell
 python record_sim_teleop.py --port COM5 --episodes 20
 ```
-
-Preview one automatically planned IK trajectory:
-
-```powershell
-python generate_scripted_dataset.py --episodes 1 --seed 0 --preview scripted_preview.mp4
-```
-
-Generate a local LeRobot dataset after the grasp parameters have been
-validated across several preview seeds:
-
-```powershell
-python generate_scripted_dataset.py --episodes 100 --overwrite
-```
-
-The scripted generator is experimental. It currently solves and executes the
-complete approach/grasp/lift/transfer/release motion, but contact parameters and
-grasp height still need tuning before it should be used to produce training
-data. Failed episodes are discarded automatically.
 
 Supporting utilities are under `tools/`:
 

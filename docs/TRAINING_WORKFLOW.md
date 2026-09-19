@@ -1,14 +1,15 @@
 # Training an SO101 policy with MuJoCo demonstrations
 
 This project uses **imitation learning**, matching the existing physical ACT
-workflow. MuJoCo supplies the robot, objects, physics, and camera images. You
-move the physical SO101 leader arm to produce successful actions in simulation.
-Those demonstrations become a LeRobot dataset, which can be mixed with the
-existing real-robot data and used to fine-tune ACT.
+workflow. MuJoCo supplies the robot, objects, physics, and camera images. An
+automatic inverse-kinematics expert produces most simulation demonstrations;
+the physical leader arm is available for corrections. Those demonstrations
+become a LeRobot dataset, which can be mixed with the existing real-robot data
+and used to fine-tune ACT.
 
 The workflow is:
 
-1. teleoperate MuJoCo and save successful demonstrations;
+1. generate successful randomized MuJoCo demonstrations automatically;
 2. inspect and, if desired, merge the simulation and physical datasets;
 3. fine-tune the existing ACT checkpoint on a CUDA GPU;
 4. run closed-loop MuJoCo evaluations over several random seeds;
@@ -33,7 +34,49 @@ lerobot-find-port
 Unplug the leader USB cable, press Enter, reconnect it, and note the reported
 port, such as `COM5`.
 
-## 2. Record successful simulation demonstrations
+## 2. Generate simulation demonstrations automatically
+
+First generate a single preview. This runs approach, descend, close, lift,
+transfer, lower, release, and retreat phases at 30 Hz:
+
+```powershell
+python generate_scripted_dataset.py `
+  --seed 0 `
+  --preview scripted_preview.mp4
+```
+
+The expert reads the block and matching tray poses directly from MuJoCo, uses
+damped Jacobian inverse kinematics within the SO101 joint limits, and randomizes
+block color, position, and yaw on each reset.
+
+Attempt 100 episodes (only successful episodes are saved):
+
+```powershell
+python generate_scripted_dataset.py --episodes 100
+```
+
+The default dataset is:
+
+```text
+C:\Users\doris\.cache\huggingface\lerobot\robododo\so101-mujoco-scripted
+```
+
+Only successful trajectories are saved. Grasp assist has been removed: the block
+moves through physical finger contacts. The expert requires opposing finger
+contacts and a verified lift before transfer. Trays use separate floor and wall
+collisions so their cavities remain open. The `--no-grasp-assist` flag is retained
+for compatibility; contact-only behavior is always active.
+
+Inspect the generated dataset:
+
+```powershell
+lerobot-edit-dataset `
+  --repo_id robododo/so101-mujoco-scripted `
+  --root C:/Users/doris/.cache/huggingface/lerobot/robododo/so101-mujoco-scripted `
+  --operation.type info
+```
+
+### Optional leader-arm corrections
 
 The recorder reads only the leader arm. It does not command the physical
 follower. Replace `COM5` with the port found above:
@@ -51,7 +94,7 @@ For every episode:
 5. retry and discard any failed or poor demonstration.
 
 Press `Q` or Escape in the camera window to stop the current episode early.
-The default output is:
+The manual recorder's default output is:
 
 ```text
 C:\Users\doris\.cache\huggingface\lerobot\robododo\so101-mujoco-color-sort
@@ -60,22 +103,13 @@ C:\Users\doris\.cache\huggingface\lerobot\robododo\so101-mujoco-color-sort
 The script refuses to overwrite that directory. To deliberately start the
 simulation dataset again from zero, add `--overwrite`.
 
-Start with 10-20 demonstrations as a pipeline test. For a useful fine-tune,
-record at least 50 varied successful episodes. Vary block position, block
-color, and initial arm pose while keeping the task physically plausible.
-
-Inspect the completed dataset:
-
-```powershell
-lerobot-edit-dataset `
-  --repo_id robododo/so101-mujoco-color-sort `
-  --root C:/Users/doris/.cache/huggingface/lerobot/robododo/so101-mujoco-color-sort `
-  --operation.type info
-```
+Use manual demonstrations mainly to correct failure modes not represented by
+the scripted expert. They are not required to generate the initial simulation
+dataset.
 
 ## 3. Merge simulation and physical demonstrations
 
-The recorder deliberately uses the physical dataset's exact schema: 30 Hz,
+The automatic generator deliberately uses the physical dataset's exact schema: 30 Hz,
 six joint features, `front` at 640x480, and `overhead` at 1280x720. This allows
 LeRobot to merge the two datasets.
 
@@ -84,8 +118,8 @@ lerobot-edit-dataset `
   --new_repo_id robododo/place-rectangle-colored-box-real-sim `
   --new_root C:/Users/doris/.cache/huggingface/lerobot/robododo/place-rectangle-colored-box-real-sim `
   --operation.type merge `
-  --operation.repo_ids '["robododo/place-rectangle-colored-box","robododo/so101-mujoco-color-sort"]' `
-  --operation.roots '["C:/Users/doris/.cache/huggingface/lerobot/robododo/place-rectangle-colored-box_20260718_195758","C:/Users/doris/.cache/huggingface/lerobot/robododo/so101-mujoco-color-sort"]'
+  --operation.repo_ids '["robododo/place-rectangle-colored-box","robododo/so101-mujoco-scripted"]' `
+  --operation.roots '["C:/Users/doris/.cache/huggingface/lerobot/robododo/place-rectangle-colored-box_20260718_195758","C:/Users/doris/.cache/huggingface/lerobot/robododo/so101-mujoco-scripted"]'
 ```
 
 Mixing the datasets preserves the real camera appearance and robot dynamics.

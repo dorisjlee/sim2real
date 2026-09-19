@@ -44,9 +44,9 @@ SAFE_Q = np.array([0.0, -1.0, 1.0, 0.5, -np.pi / 2], dtype=np.float64)
 # This calibration maps larger 0-100 values to a wider jaw opening. The real
 # dataset spans roughly 1 (closed) to 61 (fully open).
 OPEN_GRIPPER = 55.0
-CLOSED_GRIPPER = 2.0
-GRASP_SITE_Z = 0.045
-RELEASE_SITE_Z = 0.055
+CLOSED_GRIPPER = 0.0
+GRASP_SITE_Z = 0.025
+RELEASE_SITE_Z = 0.035
 
 
 @dataclass
@@ -56,13 +56,37 @@ class MotionFrame:
     phase: str
 
 
+class GraspMonitor:
+    """Require opposing contacts and an actual lift before transferring."""
+
+    def __init__(self, env):
+        self.env = env
+        self.initial_z = float(env.data.xpos[env.block_body, 2])
+        self.previous_phase = None
+
+    def check(self, phase):
+        if phase == self.previous_phase:
+            return
+        if phase in ("lift", "transfer", "lower"):
+            contacts = set()
+            for contact in self.env.data.contact:
+                if self.env.block_geom in (contact.geom1, contact.geom2):
+                    other = contact.geom2 if contact.geom1 == self.env.block_geom else contact.geom1
+                    contacts.add(mujoco.mj_id2name(self.env.model, mujoco.mjtObj.mjOBJ_GEOM, other))
+            if not {"fixed_finger_pad", "moving_finger_pad"}.issubset(contacts):
+                raise RuntimeError(f"Grasp failed before {phase}: opposing finger contacts missing")
+            if phase in ("transfer", "lower") and self.env.data.xpos[self.env.block_body, 2] < self.initial_z + 0.025:
+                raise RuntimeError(f"Grasp failed before {phase}: block did not stay lifted")
+        self.previous_phase = phase
+
+
 class ScriptedExpert:
     def __init__(self, env: SO101MujocoPolicyEnv):
         self.env = env
         self.model = env.model
         self.data = mujoco.MjData(self.model)
         self.site_id = mujoco.mj_name2id(
-            self.model, mujoco.mjtObj.mjOBJ_SITE, "gripperframe"
+            self.model, mujoco.mjtObj.mjOBJ_SITE, "grasp_center"
         )
         self.arm_joint_ids = env.joint_ids[:5]
         self.qpos_addresses = env.qpos_addresses[:5]
@@ -180,9 +204,8 @@ class ScriptedExpert:
         # for this symmetric rectangle.
         grasp_yaw = self.env.block_yaw + np.pi / 2
         approach = np.array([block[0], block[1], 0.080])
-        # gripperframe is at the finger tips. Keeping it slightly above the
-        # mat puts the finger pads around the block without driving the mesh
-        # through the table.
+        # grasp_center lies between the opposing finger surfaces, above their
+        # tips. At 25 mm the fingers straddle the 30 mm block above the mat.
         grasp = np.array([block[0], block[1], GRASP_SITE_Z])
         lift = np.array([block[0], block[1], 0.080])
         transfer = np.array([tray[0], tray[1], 0.080])
@@ -233,13 +256,19 @@ def run_episode(
     dataset: LeRobotDataset | None,
     writer: cv2.VideoWriter | None,
     task: str,
+    grasp_assist: bool = False,
 ) -> bool:
+    if grasp_assist:
+        raise ValueError('Grasp assist is disabled: demonstrations require physical contact.')
     start_state = np.concatenate((np.rad2deg(SAFE_Q), [OPEN_GRIPPER]))
-    observation = env.reset(initial_state=start_state)
+    needs_images = dataset is not None or writer is not None
+    observation = env.reset(initial_state=start_state, render_cameras=needs_images)
     expert = ScriptedExpert(env)
     motion = expert.plan()
+    monitor = GraspMonitor(env)
 
     for frame in motion:
+        monitor.check(frame.phase)
         action_array = action_from_motion(frame)
         action = {
             f"{name}.pos": float(value)
@@ -266,12 +295,14 @@ def run_episode(
                 2,
             )
             writer.write(display)
-        observation = env.step(action_array)
+        observation = env.step(action_array, render_cameras=False)
+        if needs_images:
+            observation = env.observation(render_cameras=True)
 
     # Allow the released object to settle before grading the trajectory.
     final_action = action_from_motion(motion[-1])
     for _ in range(30):
-        observation = env.step(final_action)
+        observation = env.step(final_action, render_cameras=needs_images)
         if writer is not None:
             writer.write(cv2.cvtColor(video_frame(observation), cv2.COLOR_RGB2BGR))
     return env.success()
@@ -286,6 +317,11 @@ def main() -> None:
     parser.add_argument("--source-dataset-root", type=Path, default=DEFAULT_DATASET_ROOT)
     parser.add_argument("--task", default=DEFAULT_TASK)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--no-grasp-assist",
+        action="store_true",
+        help="Compatibility flag; contact-only physics is now always used",
+    )
     parser.add_argument(
         "--preview",
         type=Path,
@@ -328,7 +364,13 @@ def main() -> None:
     try:
         for episode in range(args.episodes):
             try:
-                success = run_episode(env, dataset, writer, args.task)
+                success = run_episode(
+                    env,
+                    dataset,
+                    writer,
+                    args.task,
+                    grasp_assist=False,
+                )
             except RuntimeError as error:
                 success = False
                 print(f"Episode {episode}: plan failed: {error}")
